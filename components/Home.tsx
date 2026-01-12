@@ -9,80 +9,106 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   return (
-    <div className="space-y-6">
-      {/* Welcome Hero */}
-      <section className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
-        <div className="relative z-10">
-          <h2 className="text-2xl font-bold mb-2">Hello!</h2>
-          <p className="text-blue-50 opacity-90 text-sm leading-relaxed max-w-[80%]">
-            Welcome to the Kensington Pediatrics portal. We're here to provide the best care for your children.
-          </p>
-          <div className="mt-4 flex space-x-3">
-            <button 
-              onClick={() => onNavigate(AppView.VIDEO_CONSULT)}
-              className="bg-white text-blue-600 px-4 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-blue-50 transition-all"
-            >
-              Start Video Care
-            </button>
+    <div className="space-y-8 pb-10">
+      {/* Welcome Hero - Fancy Version */}
+      <section className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 p-8 text-white shadow-2xl shadow-blue-500/20">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 blur-[100px] rounded-full -mr-20 -mt-20"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/20 blur-[100px] rounded-full -ml-20 -mb-20"></div>
+        
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-4 text-center md:text-left">
+            <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-blue-100">Portal Active</span>
+            </div>
+            <h2 className="text-4xl font-extrabold tracking-tight font-quicksand">
+              Hello, <br/><span className="text-blue-400">Welcome Back!</span>
+            </h2>
+            <p className="text-slate-300 text-sm leading-relaxed max-w-xs">
+              Exceptional pediatric care for your little ones, right at your fingertips.
+            </p>
+            <div className="flex justify-center md:justify-start pt-2">
+              <button 
+                onClick={() => onNavigate(AppView.VIDEO_CONSULT)}
+                className="shimmer bg-white text-slate-900 px-6 py-3 rounded-2xl text-sm font-bold shadow-lg hover:shadow-xl hover:bg-blue-50 transition-all flex items-center group"
+              >
+                Start Quick Visit
+                <i className="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="absolute right-[-20px] bottom-[-20px] opacity-10">
-          <i className="fa-solid fa-shield-cat text-9xl"></i>
+          
+          <div className="hidden sm:flex relative animate-float">
+            <div className="w-32 h-32 bg-white/5 rounded-full flex items-center justify-center border border-white/10 p-4">
+              <div className="w-full h-full bg-blue-500/20 rounded-full flex items-center justify-center">
+                 <i className="fa-solid fa-stethoscope text-5xl text-blue-300 opacity-60"></i>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Main Actions Grid */}
-      <div className="grid grid-cols-2 gap-4">
+      {/* Fancy Action Grid */}
+      <div className="grid grid-cols-2 gap-5">
         <ActionCard 
-          icon="fa-message" 
-          title="Contact Us" 
-          color="bg-teal-50" 
-          iconColor="text-teal-600"
+          icon="fa-comments-medical" 
+          title="Messenger" 
+          desc="Chat with care team"
+          color="from-emerald-400 to-teal-500" 
           onClick={() => onNavigate(AppView.COMMUNICATION)}
         />
         <ActionCard 
-          icon="fa-camera" 
-          title="Send Media" 
-          color="bg-rose-50" 
-          iconColor="text-rose-600"
+          icon="fa-images" 
+          title="Symptoms" 
+          desc="Send photos/videos"
+          color="from-rose-400 to-pink-500" 
           onClick={() => onNavigate(AppView.UPLOAD)}
         />
         <ActionCard 
-          icon="fa-phone-volume" 
-          title="Request Callback" 
-          color="bg-amber-50" 
-          iconColor="text-amber-600"
-          onClick={() => onNavigate(AppView.CALLBACK)}
-        />
-        <ActionCard 
           icon="fa-video" 
-          title="Video Visit" 
-          color="bg-indigo-50" 
-          iconColor="text-indigo-600"
+          title="Telehealth" 
+          desc="See a doctor now"
+          color="from-indigo-400 to-blue-600" 
           onClick={() => onNavigate(AppView.VIDEO_CONSULT)}
+          className="col-span-2"
         />
       </div>
 
-      {/* Quick Links / Important Info */}
-      <section className="bg-white rounded-2xl p-5 border border-slate-100">
-        <h3 className="font-bold text-slate-800 mb-3 flex items-center">
-          <i className="fa-solid fa-circle-info text-blue-500 mr-2"></i>
-          Emergency Contact
-        </h3>
-        <p className="text-sm text-slate-600 mb-4">
-          For urgent medical concerns, please call our main office immediately.
+      {/* Emergency Strip */}
+      <section className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm relative group overflow-hidden">
+        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+           <i className="fa-solid fa-kit-medical text-6xl"></i>
+        </div>
+        <div className="flex items-center space-x-4 mb-4">
+          <div className="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 shadow-inner">
+            <i className="fa-solid fa-heart-pulse text-xl"></i>
+          </div>
+          <div>
+            <h3 className="font-extrabold text-slate-800 font-quicksand">Urgent Care</h3>
+            <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Emergency Response</p>
+          </div>
+        </div>
+        
+        <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+          If your child has an emergency, please use our priority phone line below for immediate attention.
         </p>
+        
         <a 
           href={`tel:${PRACTICE_INFO.practicePhone}`}
-          className="flex items-center justify-between bg-slate-50 p-4 rounded-xl hover:bg-slate-100 transition-all group"
+          className="flex items-center justify-between bg-slate-900 text-white p-5 rounded-[1.5rem] hover:bg-slate-800 transition-all shadow-xl shadow-slate-200"
         >
           <div className="flex items-center">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm mr-3">
-              <i className="fa-solid fa-phone text-blue-500"></i>
+            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center mr-4">
+              <i className="fa-solid fa-phone-volume text-white"></i>
             </div>
-            <span className="font-bold text-slate-700">{PRACTICE_INFO.practicePhone}</span>
+            <div>
+              <span className="block text-[10px] text-white/50 font-bold uppercase tracking-widest">Priority Number</span>
+              <span className="font-black text-lg tracking-tight">{PRACTICE_INFO.practicePhone}</span>
+            </div>
           </div>
-          <i className="fa-solid fa-chevron-right text-slate-400 group-hover:translate-x-1 transition-transform"></i>
+          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-rose-500 transition-colors">
+            <i className="fa-solid fa-chevron-right text-sm"></i>
+          </div>
         </a>
       </section>
     </div>
@@ -92,20 +118,29 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 interface ActionCardProps {
   icon: string;
   title: string;
+  desc: string;
   color: string;
-  iconColor: string;
   onClick: () => void;
+  className?: string;
 }
 
-const ActionCard: React.FC<ActionCardProps> = ({ icon, title, color, iconColor, onClick }) => (
+const ActionCard: React.FC<ActionCardProps> = ({ icon, title, desc, color, onClick, className = "" }) => (
   <button 
     onClick={onClick}
-    className={`${color} p-6 rounded-3xl flex flex-col items-center justify-center space-y-3 transition-all transform hover:scale-[1.02] active:scale-[0.98] border border-white shadow-sm`}
+    className={`relative group bg-white p-1 rounded-[2.2rem] transition-all transform hover:-translate-y-1 active:scale-[0.98] shadow-sm hover:shadow-xl ${className}`}
   >
-    <div className={`w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm ${iconColor}`}>
-      <i className={`fa-solid ${icon} text-xl`}></i>
+    <div className="bg-white rounded-[2.1rem] p-5 flex flex-col items-start h-full space-y-4 overflow-hidden border border-slate-50">
+      <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center text-white shadow-lg shadow-current/20 group-hover:scale-110 transition-transform`}>
+        <i className={`fa-solid ${icon} text-lg`}></i>
+      </div>
+      <div className="text-left">
+        <h4 className="font-extrabold text-slate-800 text-sm font-quicksand mb-1">{title}</h4>
+        <p className="text-[10px] text-slate-400 font-medium leading-tight">{desc}</p>
+      </div>
+      <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+        <i className="fa-solid fa-circle-plus text-slate-200 text-xl"></i>
+      </div>
     </div>
-    <span className="font-bold text-slate-700 text-sm">{title}</span>
   </button>
 );
 

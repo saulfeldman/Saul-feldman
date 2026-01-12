@@ -6,8 +6,8 @@ export const PRACTICE_INFO: ContactInfo = {
   whatsapp: '+17188518080',
   drFeldmanText: '718-218-4620',
   drBulmashText: '+1347-4523388',
-  fax: '718-871-8808',
-  website: 'https://kensingtonpediatrics.com'
+  website: 'https://kensingtonpediatrics.com',
+  doximityWaitingRoom: 'https://doximity.com/cv/kensington-pediatrics'
 };
 
 export const COLORS = {

@@ -36,14 +36,6 @@ const CommunicationCenter: React.FC = () => {
       link: `sms:${PRACTICE_INFO.drBulmashText}`,
       icon: 'fa-comment-medical',
       color: 'bg-indigo-500',
-    },
-    {
-      name: 'Fax Machine',
-      action: 'Send Document',
-      value: PRACTICE_INFO.fax,
-      link: `tel:${PRACTICE_INFO.fax}`,
-      icon: 'fa-print',
-      color: 'bg-slate-500',
     }
   ];
 
@@ -55,27 +47,39 @@ const CommunicationCenter: React.FC = () => {
       </div>
 
       <div className="space-y-3">
-        {contacts.map((contact, idx) => (
-          <a
-            key={idx}
-            href={contact.link}
-            target={contact.brand ? "_blank" : "_self"}
-            rel="noopener noreferrer"
-            className="flex items-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group"
-          >
-            <div className={`w-12 h-12 ${contact.color} rounded-xl flex items-center justify-center text-white mr-4 shadow-sm`}>
-              <i className={`fa-${contact.brand ? 'brands' : 'solid'} ${contact.icon} text-xl`}></i>
+        {contacts.map((contact, idx) => {
+          const Content = (
+            <div className="flex items-center">
+              <div className={`w-12 h-12 ${contact.color} rounded-xl flex items-center justify-center text-white mr-4 shadow-sm`}>
+                <i className={`fa-${contact.brand ? 'brands' : 'solid'} ${contact.icon} text-xl`}></i>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-slate-800">{contact.name}</h3>
+                <p className="text-xs text-slate-500 uppercase font-semibold tracking-wider">{contact.action}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-medium text-slate-600">{contact.value}</p>
+                {contact.link !== '#' && <i className="fa-solid fa-arrow-up-right-from-square text-xs text-slate-300 mt-1"></i>}
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-slate-800">{contact.name}</h3>
-              <p className="text-xs text-slate-500 uppercase font-semibold tracking-wider">{contact.action}</p>
+          );
+
+          return contact.link === '#' ? (
+            <div key={idx} className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm opacity-80 cursor-default">
+              {Content}
             </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-slate-600">{contact.value}</p>
-              <i className="fa-solid fa-arrow-up-right-from-square text-xs text-slate-300 mt-1"></i>
-            </div>
-          </a>
-        ))}
+          ) : (
+            <a
+              key={idx}
+              href={contact.link}
+              target={contact.brand ? "_blank" : "_self"}
+              rel="noopener noreferrer"
+              className="block bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group"
+            >
+              {Content}
+            </a>
+          );
+        })}
       </div>
 
       <div className="p-4 bg-amber-50 rounded-xl border border-amber-100 flex items-start space-x-3">

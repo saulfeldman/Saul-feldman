@@ -4,16 +4,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kensington Pediatrics</title>
+  <title>Kensington Pediatrics | Patient Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+      --soft-teal: #f0fdfa;
+      --soft-blue: #eff6ff;
+    }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      background: #f8fafc;
     }
     h1, h2, h3, .font-quicksand {
       font-family: 'Quicksand', sans-serif;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    @keyframes pulse-soft {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+    .animate-pulse-soft {
+      animation: pulse-soft 3s ease-in-out infinite;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .mesh-gradient {
+      background-color: #ffffff;
+      background-image: 
+        radial-gradient(at 0% 0%, hsla(210,100%,98%,1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(190,100%,98%,1) 0, transparent 50%), 
+        radial-gradient(at 100% 100%, hsla(230,100%,98%,1) 0, transparent 50%), 
+        radial-gradient(at 0% 100%, hsla(180,100%,98%,1) 0, transparent 50%);
+    }
+    .shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      animation: shimmer 2.5s infinite;
+    }
+    @keyframes shimmer {
+      100% { left: 200%; }
     }
   </style>
 <script type="importmap">
@@ -26,7 +84,7 @@
 }
 </script>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="mesh-gradient min-h-screen">
   <div id="root"></div>
 </body>
 </html>

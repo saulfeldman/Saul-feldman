@@ -1,140 +1,186 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
+import { PRACTICE_INFO } from '../constants';
 
 const VideoConsult: React.FC = () => {
-  const [isActive, setIsActive] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [step, setStep] = useState<'info' | 'setup' | 'active'>('info');
+  const [childName, setChildName] = useState('');
+  
+  // Generate a unique room name for security and privacy
+  const roomName = useMemo(() => {
+    const cleanName = childName.replace(/[^a-zA-Z0-9]/g, '');
+    const randomId = Math.floor(1000 + Math.random() * 9000);
+    return `KP-${cleanName || 'Patient'}-${randomId}`;
+  }, [childName, step === 'setup']);
 
-  const startConsultation = async () => {
-    setIsConnecting(true);
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ 
-        video: true, 
-        audio: true 
-      });
-      setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
-      // Simulate connection time
-      setTimeout(() => {
-        setIsConnecting(false);
-        setIsActive(true);
-      }, 2000);
-    } catch (err) {
-      console.error("Error accessing camera/microphone:", err);
-      setIsConnecting(false);
-      alert("Could not access camera or microphone. Please check your permissions.");
-    }
+  const jitsiLink = `https://meet.jit.si/${roomName}`;
+
+  // Pre-filled message for the doctor
+  const alertMessage = `Kensington Pediatrics: ${childName || 'My child'} is ready for a video visit. Please join the secure room here: ${jitsiLink}`;
+
+  const handleNotifyAndJoin = () => {
+    // Open SMS app with pre-filled content to Dr. Feldman's hidden number
+    // The number is pulled from constants but not displayed in the UI text
+    window.location.href = `sms:${PRACTICE_INFO.drFeldmanText}?body=${encodeURIComponent(alertMessage)}`;
+    setStep('active');
   };
 
-  const endConsultation = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-    }
-    setStream(null);
-    setIsActive(false);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-    };
-  }, [stream]);
-
-  if (!isActive) {
+  if (step === 'info') {
     return (
-      <div className="h-full flex flex-col items-center justify-center space-y-6 text-center py-12">
-        <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 mb-4 animate-pulse">
+      <div className="h-full flex flex-col items-center space-y-6 text-center py-4 animate-in fade-in duration-500">
+        <div className="w-24 h-24 bg-blue-500 rounded-[2rem] flex items-center justify-center text-white shadow-xl shadow-blue-100 rotate-3">
           <i className="fa-solid fa-video text-4xl"></i>
         </div>
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800">Telehealth Visit</h2>
-          <p className="text-slate-500 max-w-xs mt-2 text-sm leading-relaxed">
-            Connect securely with our medical team from the comfort of your home.
+        
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-slate-800">Secure Video Room</h2>
+          <p className="text-slate-500 max-w-xs mx-auto text-sm leading-relaxed">
+            Instant, patient-initiated video visits. No app download or account required.
           </p>
         </div>
-        
-        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm w-full">
-          <h3 className="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wider">Before you start:</h3>
-          <ul className="text-left space-y-3 text-sm text-slate-600">
-            <li className="flex items-start">
-              <i className="fa-solid fa-check-circle text-green-500 mr-2 mt-1"></i>
-              Ensure you have a stable internet connection.
-            </li>
-            <li className="flex items-start">
-              <i className="fa-solid fa-check-circle text-green-500 mr-2 mt-1"></i>
-              Find a quiet, well-lit space.
-            </li>
-            <li className="flex items-start">
-              <i className="fa-solid fa-check-circle text-green-500 mr-2 mt-1"></i>
-              Have your child's recent symptoms ready.
-            </li>
-          </ul>
+
+        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm w-full space-y-5">
+          <div className="space-y-4">
+            <div className="flex items-start space-x-4 text-left">
+              <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">1</div>
+              <p className="text-sm text-slate-600">Enter your child's name to create a private room.</p>
+            </div>
+            <div className="flex items-start space-x-4 text-left">
+              <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">2</div>
+              <p className="text-sm text-slate-600">Alert Dr. Feldman via a pre-filled secure text message.</p>
+            </div>
+            <div className="flex items-start space-x-4 text-left">
+              <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">3</div>
+              <p className="text-sm text-slate-600">Enter the room and wait for the doctor to join you.</p>
+            </div>
+          </div>
         </div>
 
         <button
-          onClick={startConsultation}
-          disabled={isConnecting}
-          className="w-full bg-blue-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-200 hover:bg-blue-600 active:scale-95 transition-all flex items-center justify-center space-x-2"
+          onClick={() => setStep('setup')}
+          className="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 active:scale-95 transition-all flex items-center justify-center space-x-2"
         >
-          {isConnecting ? (
-            <>
-              <i className="fa-solid fa-circle-notch animate-spin"></i>
-              <span>Connecting...</span>
-            </>
-          ) : (
-            <>
-              <i className="fa-solid fa-play"></i>
-              <span>Start Secure Session</span>
-            </>
-          )}
+          <span>Get Started</span>
+          <i className="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     );
   }
 
+  if (step === 'setup') {
+    return (
+      <div className="h-full flex flex-col space-y-6 py-4 animate-in slide-in-from-right-4 duration-300">
+        <button onClick={() => setStep('info')} className="flex items-center text-slate-400 text-sm font-bold hover:text-slate-600 w-fit">
+          <i className="fa-solid fa-chevron-left mr-2"></i> Back
+        </button>
+        
+        <div className="space-y-1">
+          <h2 className="text-2xl font-bold text-slate-800">Identify Patient</h2>
+          <p className="text-slate-500 text-sm">Please provide the name for the video chart.</p>
+        </div>
+
+        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase ml-2 tracking-wider">Child's Name</label>
+            <input
+              required
+              type="text"
+              value={childName}
+              onChange={e => setChildName(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all"
+              placeholder="Full Name"
+            />
+          </div>
+
+          <button
+            onClick={handleNotifyAndJoin}
+            disabled={!childName}
+            className={`w-full font-bold py-4 rounded-2xl shadow-lg transition-all flex flex-col items-center justify-center ${
+              childName ? 'bg-blue-600 text-white shadow-blue-100 hover:bg-blue-700' : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+            }`}
+          >
+            <span className="flex items-center space-x-2">
+              <i className="fa-solid fa-paper-plane"></i>
+              <span>Notify Dr. Feldman & Join Room</span>
+            </span>
+          </button>
+          
+          <p className="text-[10px] text-center text-slate-400 font-medium px-4">
+            Tapping this will open your messaging app to send a one-time notification to the doctor's secure line.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative h-[70vh] rounded-3xl overflow-hidden bg-slate-900 shadow-2xl">
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        muted
-        className="w-full h-full object-cover grayscale-0"
-      />
-      
-      {/* Remote User Placeholder (Simulated Provider) */}
-      <div className="absolute top-4 right-4 w-24 h-32 bg-slate-800 rounded-xl overflow-hidden border-2 border-slate-700 shadow-lg">
-        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-800 text-slate-500">
-          <i className="fa-solid fa-user-doctor text-2xl mb-1"></i>
-          <span className="text-[10px] font-bold">Connecting...</span>
+    <div className="h-full flex flex-col space-y-6 py-4 animate-in fade-in duration-500">
+      <div className="text-center space-y-2">
+        <div className="inline-flex items-center space-x-2 bg-green-100 text-green-700 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-green-200">
+          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          <span>Waiting Room Active</span>
+        </div>
+        <h2 className="text-2xl font-bold text-slate-800">Virtual Clinic</h2>
+      </div>
+
+      <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm space-y-8">
+        <div className="text-center space-y-4">
+          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 mx-auto border-2 border-blue-100 shadow-inner">
+            <i className="fa-solid fa-user-md text-3xl"></i>
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm text-slate-700 font-bold italic">"I've sent the alert to the doctor."</p>
+            <p className="text-xs text-slate-500">Please enter your room and wait for Dr. Feldman.</p>
+          </div>
+          
+          <a 
+            href={jitsiLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 active:scale-95 transition-all text-center"
+          >
+            <i className="fa-solid fa-door-open mr-2"></i>
+            Enter Video Room
+          </a>
+        </div>
+
+        <div className="border-t border-slate-50 pt-6">
+          <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest text-center mb-4">Fallback Options</p>
+          <div className="grid grid-cols-2 gap-3">
+            <button 
+              onClick={handleNotifyAndJoin}
+              className="flex flex-col items-center justify-center p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-all space-y-2"
+            >
+              <i className="fa-solid fa-redo text-blue-400 text-lg"></i>
+              <span className="text-[9px] font-bold text-slate-600 uppercase">Resend Alert</span>
+            </button>
+            <a 
+              href={`https://wa.me/${PRACTICE_INFO.whatsapp.replace('+', '')}?text=${encodeURIComponent(alertMessage)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-all space-y-2"
+            >
+              <i className="fa-brands fa-whatsapp text-green-500 text-lg"></i>
+              <span className="text-[9px] font-bold text-slate-600 uppercase">Alert WhatsApp</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-0 right-0 flex justify-center space-x-4 px-4">
-        <button className="w-14 h-14 bg-slate-800/80 backdrop-blur-md rounded-full text-white flex items-center justify-center hover:bg-slate-700">
-          <i className="fa-solid fa-microphone"></i>
-        </button>
-        <button 
-          onClick={endConsultation}
-          className="w-20 h-14 bg-rose-500 rounded-2xl text-white flex items-center justify-center hover:bg-rose-600 shadow-lg shadow-rose-500/30"
-        >
-          <i className="fa-solid fa-phone-slash text-xl"></i>
-        </button>
-        <button className="w-14 h-14 bg-slate-800/80 backdrop-blur-md rounded-full text-white flex items-center justify-center hover:bg-slate-700">
-          <i className="fa-solid fa-video"></i>
-        </button>
+      <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start space-x-3">
+        <i className="fa-solid fa-lightbulb text-amber-500 mt-0.5"></i>
+        <div className="text-[11px] text-amber-800 leading-tight">
+          <p className="font-bold mb-0.5 underline">Doctor's Note:</p>
+          <p>Please stay in the Jitsi room once you open it. If the doctor doesn't join within 5 minutes, please call the main office at {PRACTICE_INFO.practicePhone}.</p>
+        </div>
       </div>
 
-      <div className="absolute top-4 left-4 bg-green-500/20 backdrop-blur-sm px-3 py-1 rounded-full flex items-center space-x-2 border border-green-500/30">
-        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-        <span className="text-[10px] font-bold text-white uppercase tracking-widest">Live Secure</span>
-      </div>
+      <button 
+        onClick={() => setStep('info')}
+        className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] hover:text-rose-500 transition-colors text-center w-full"
+      >
+        Exit Video Hub
+      </button>
     </div>
   );
 };

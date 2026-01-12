@@ -3,8 +3,7 @@ export enum AppView {
   HOME = 'home',
   COMMUNICATION = 'communication',
   VIDEO_CONSULT = 'video_consult',
-  UPLOAD = 'upload',
-  CALLBACK = 'callback'
+  UPLOAD = 'upload'
 }
 
 export interface ContactInfo {
@@ -12,8 +11,8 @@ export interface ContactInfo {
   whatsapp: string;
   drFeldmanText: string;
   drBulmashText: string;
-  fax: string;
   website: string;
+  doximityWaitingRoom?: string;
 }
 
 export interface UploadedFile {
