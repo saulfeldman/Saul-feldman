@@ -1,0 +1,8 @@
+{
+  "name": "Kensington Pediatrics Patient Portal",
+  "description": "A comprehensive patient portal for Kensington Pediatrics featuring direct messaging to doctors, video consultations, and secure media uploads.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
